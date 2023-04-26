@@ -1,3 +1,5 @@
+Boiler plate implementation of Playwright tests built with Java and TestNG testrunner.
+
 References used:
 https://playwright.dev
 
