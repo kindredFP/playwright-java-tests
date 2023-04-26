@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
-public class App {
+public class AppTest {
     public static void main(String[] args) {
         try (Playwright playwright = Playwright.create()) {
             Browser browser = playwright.chromium().launch();
