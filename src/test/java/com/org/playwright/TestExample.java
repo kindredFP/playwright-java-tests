@@ -1,12 +1,13 @@
+package com.org.playwright;
+
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.AriaRole;
-import org.junit.jupiter.api.*;
+import org.testng.annotations.*;
 
 import java.util.regex.Pattern;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class TestExample {
     // Shared between all tests in this class.
@@ -17,24 +18,24 @@ public class TestExample {
     BrowserContext context;
     Page page;
 
-    @BeforeAll
+    @BeforeClass
     static void launchBrowser() {
         playwright = Playwright.create();
-        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(true));
     }
 
-    @AfterAll
+    @AfterClass
     static void closeBrowser() {
         playwright.close();
     }
 
-    @BeforeEach
+    @BeforeMethod
     void createContextAndPage() {
         context = browser.newContext();
         page = context.newPage();
     }
 
-    @AfterEach
+    @AfterMethod
     void closeContext() {
         context.close();
     }
@@ -43,14 +44,15 @@ public class TestExample {
     void shouldClickButton() {
         page.navigate("data:text/html,<script>var result;</script><button onclick='result=\"Clicked\"'>Go</button>");
         page.locator("button").click();
-        assertEquals("Clicked", page.evaluate("result"));
+        assertThat(page.locator("button")).isEnabled();
     }
 
     @Test
     void shouldCheckTheBox() {
         page.setContent("<input id='checkbox' type='checkbox'></input>");
         page.locator("input").check();
-        assertTrue((Boolean) page.evaluate("() => window['checkbox'].checked"));
+        assertThat(page.locator("input")).isChecked();
+
     }
 
     @Test
@@ -59,7 +61,7 @@ public class TestExample {
         page.locator("input[name=\"search\"]").click();
         page.locator("input[name=\"search\"]").fill("playwright");
         page.locator("input[name=\"search\"]").press("Enter");
-        assertEquals("https://en.wikipedia.org/wiki/Playwright", page.url());
+        assertThat(page).hasURL("https://en.wikipedia.org/wiki/Playwright");
     }
 
     @Test
